@@ -681,6 +681,11 @@ a.socl-btn img{
   color: #fff;
   font-weight:300;
 }
+.tets-time span{
+
+  padding-left: 10px;
+}
+
 .tets-time img{
   vertical-align: text-top;
 }
@@ -1047,6 +1052,38 @@ span.stts-grn{
   font-size: 11px;
   color: #36D41F;
   padding: 2px 10px;
+}
+.rev-rslt h2.accordion-header button span.badge-gray{
+  border: 1px solid #333232;
+  border-radius: 15px;
+  font-size: 11px;
+  color: #333232;
+  padding: 2px 10px;
+}
+.rev-rslt h2.accordion-header button span.badge-yel{
+  border: 1px solid #140a7d;
+  border-radius: 15px;
+  font-size: 11px;
+  color: #140a7d;
+  padding: 2px 10px;
+}
+.wrng {
+  color: red; /* Style for wrong answers */
+}
+
+.correct {
+  color: green; /* Style for correct answers */
+}
+.marked {
+  color: #140a7d ;
+}
+
+.skipped {
+  color: gray; /* Style for skipped answers, if needed */
+}
+
+.explanations{
+  margin-top: 10px;
 }
 .accordion-body p{
   font-size: 14px;
@@ -1968,3 +2005,52 @@ footer {
 
 
 }
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirm-btn {
+  background-color: green;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: red;
+  color: white;
+}
+
+.test-time span {
+  font-size: 12px;
+} 

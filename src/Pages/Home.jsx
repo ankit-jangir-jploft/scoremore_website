@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
     const paginationRef = useRef(null);
+    const isLoggedIn = localStorage.getItem("token") !== null;
     useEffect(() => {
         // This runs after the component has mounted, ensuring the pagination container exists
         if (paginationRef.current) {
@@ -43,7 +44,7 @@ const Home = () => {
                         <img src={Checmark} alt="Checmark" /> In id est mollis, convallis diam eu, malesuada odio.
                     </p> */}
                     <div className='d-flex justify-content-center align-items-center mt-5'>
-                        <Link to='/SignUp' className='btn-primary py-3 me-4'>Get Started</Link>
+                        <Link to={isLoggedIn ? '/Dashboard' : '/SignUp'}  className='btn-primary py-3 me-4'>Get Started</Link>
                         {/* <a href='' className=''><img src={GooglePlay} alt="GooglePlay" className='google-play' /></a> */}
                     </div>
                 </Container>

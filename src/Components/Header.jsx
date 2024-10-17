@@ -1,46 +1,49 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Dropdown, Nav, Navbar } from "react-bootstrap";
-import { FaSun, FaMoon } from "react-icons/fa"; // Import sun and moon icons
+import { FaSun, FaMoon } from "react-icons/fa";
 import Brand from "../assets/img/score-logo.svg";
 import Brandw from "../assets/img/score-logow.svg";
-import Profilepic from "../assets/img/profile-pic.svg";
+import profilePicture from "../assets/img/profile-pic.svg";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "./ThemeProvider";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
 
   useEffect(() => {
-    if (!theme) {
-      localStorage.setItem("theme", "light");
-    }
-  }, []);
+    const token = localStorage.getItem("token"); // Retrieve token from local storage
+    setIsLoggedIn(!!token); // Update login state based on token presence
+    console.log("Retrieved token: ", token);
+  }, []); // This will run only once on component mount
 
-  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove the token from local storage
+    setIsLoggedIn(false); // Update login state
+    toast.success("you are logged out !!")
+    navigate("/"); // Redirect to home or login page
+  };
+
   const SignUp = () => {
     navigate("/SignUp");
   };
 
-  let isLoggenIn = false;
-
   return (
     <div>
-      <Navbar expand="lg" className="" sticky="top">
+      <Navbar expand="lg" sticky="top">
         <Container>
           <Navbar.Brand href="/">
-            {theme === "light" ? (
-              <img src={Brand} alt="Search" />
-            ) : (
-              <img src={Brandw} alt="Search" />
-            )}
+            <img src={theme === "light" ? Brand : Brandw} alt="Brand" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-            <Nav className="">
+            <Nav>
               <Nav.Link href="/Roadmap">Flashcards</Nav.Link>
               <Nav.Link href="/Subjects">Practice Test</Nav.Link>
               <Nav.Link href="/Subjects">Readiness Test</Nav.Link>
@@ -59,34 +62,28 @@ const Header = () => {
                 </label>
               </div>
             </Nav>
-            {isLoggenIn ? (
+            {isLoggedIn ? (
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <img src={profilePicture} alt="Profile pic" />
+                  <p>
+                    Welcome Back!
+                    <span>Member</span>
+                  </p>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item href="/Myaccount">My Account</Dropdown.Item>
+                  <Dropdown.Item href="/Roadmap">Flashcard</Dropdown.Item>
+                  <Dropdown.Item href="/Reviewprtest">Review Questions</Dropdown.Item>
+                  <Dropdown.Item href="/Reminder">Reminder</Dropdown.Item>
+                  <Dropdown.Item href="/Plansandpricing">Plans and Pricing</Dropdown.Item>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
               <Button type="submit" onClick={SignUp}>
                 Sign Up
               </Button>
-            ) : (
-              <div>
-                <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    <img src={Profilepic} alt="Profile pic" />
-                    <p>
-                      Join For Free
-                      <span>Member</span>
-                    </p>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="/Myaccount">My Account</Dropdown.Item>
-                    <Dropdown.Item href="/Roadmap">Flashcard</Dropdown.Item>
-                    <Dropdown.Item href="/Reviewquestions">
-                      Review Questions
-                    </Dropdown.Item>
-                    <Dropdown.Item href="/Reminder">Reminder</Dropdown.Item>
-                    <Dropdown.Item href="/Plansandpricing">
-                      Plans and Pricing
-                    </Dropdown.Item>
-                    <Dropdown.Item href="/">Logout</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
             )}
           </Navbar.Collapse>
         </Container>
