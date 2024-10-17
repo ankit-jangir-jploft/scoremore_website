@@ -108,9 +108,20 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
 
     const resetQuestionState = useCallback(() => {
         console.log("countdown time", countdownTime);
-        if (params.card !== "readinessTest") {
-            setCountdownTime(countdownTime);
+        if (params.card === "readinessTest") {
+            // For "readinessTest", restore the countdown to the last saved time
+            const currentQuestionId = currentQuestion._id;
+            const storedTime = timeSpent[currentQuestionId] || countdownTime;
+            setCountdownTime(storedTime);
+        } else {
+            // For other cards, reset the countdown to default based on card type
+            if (params.card === 'fastFive') {
+                setCountdownTime(15);
+            } else if (params.card === "timedTest") {
+                setCountdownTime(time);
+            }
         }
+    
         setIsMarked(false);
         setSelectedOption(null);
         setShowExplanation(false);
