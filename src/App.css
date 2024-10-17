@@ -801,6 +801,10 @@ a.socl-btn img {
   color: #fff;
   font-weight: 300;
 }
+.tets-time span{
+
+  padding-left: 10px;
+}
 
 .tets-time img {
   vertical-align: text-top;
@@ -1236,6 +1240,39 @@ span.stts-grn {
   color: #36D41F;
   padding: 2px 10px;
   width: auto;
+}
+.rev-rslt h2.accordion-header button span.badge-gray{
+  border: 1px solid #333232;
+  border-radius: 15px;
+  font-size: 11px;
+  color: #333232;
+  padding: 2px 10px;
+}
+
+.rev-rslt h2.accordion-header button span.badge-yel{
+  border: 1px solid #140a7d;
+  border-radius: 15px;
+  font-size: 11px;
+  color: #140a7d;
+  padding: 2px 10px;
+}
+.wrng {
+  color: #FF0000; /* Style for wrong answers */
+}
+
+.correct {
+  color: #36D41F; /* Style for correct answers */
+}
+
+.skipped {
+  color: #333232; /* Style for skipped answers, if needed */
+}
+.marked {
+  color: #140a7d ;
+}
+
+.explanations{
+  margin-top: 10px;
 }
 
 .accordion-body p {
@@ -2717,3 +2754,102 @@ input:checked+.slider:before {
   top: 6px;
   color: #fff;
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirm-btn {
+  background-color: green;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: red;
+  color: white;
+}
+
+
+.previous {
+  color: white;
+}
+
+.skip {
+  color: white;
+}
+
+.tets-next a {
+  color: white;
+}
+
+.radiness_item h3{
+  font-size: 35px;
+  font-weight: bold;
+  line-height: 48px;
+}
+
+.radiness_item{
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.radiness_item .radiness_list{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.radiness_item .radiness_list li{
+  flex: 0 0 50%;
+}
+.radiness_item .radiness_list li{
+  list-style: none;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 25px;
+  background-image: url('./assets/img/8666665_check_icon.svg');
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position: calc(-10px);
+
+}
+
+.test-time span {
+  font-size: 14px;
+  margin-left: 7px;
+} 
+.test-time img {
+ width: 15px;
+} 
