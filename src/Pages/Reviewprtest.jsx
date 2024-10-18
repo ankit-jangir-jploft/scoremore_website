@@ -17,10 +17,12 @@ const Reviewprtest = () => {
         const fetchProfileData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${api_baseURL}/user/myProfile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
+                const response = await axios.post(`${api_baseURL}/user/myProfile`, {}, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`, 
+                        'Content-Type': 'application/json' 
                     },
+                    withCredentials: true,
                 });
                 if (response.data.success) {
                     setTestResults(response.data.user.testResults);
