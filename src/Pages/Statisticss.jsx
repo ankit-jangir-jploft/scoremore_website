@@ -43,10 +43,12 @@ const Statisticss = () => {
         const fetchProfileData = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get(`${api_baseURL}/user/myProfile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
+                const response = await axios.post(`${api_baseURL}/user/myProfile`, {}, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`, 
+                        'Content-Type': 'application/json' 
                     },
+                    withCredentials: true,
                 });
                 if (response.data.success) {
                     setTestResults(response.data.user.testResults);
@@ -55,6 +57,7 @@ const Statisticss = () => {
                 console.error('Error fetching profile data:', error);
             }
         };
+        
 
         fetchProfileData();
     }, []);
