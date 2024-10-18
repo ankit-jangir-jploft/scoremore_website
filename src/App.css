@@ -2853,3 +2853,13 @@ input:checked+.slider:before {
 .test-time img {
  width: 15px;
 } 
+
+
+.no-profile-picture{
+  display: flex;
+  text-align: center;
+  align-items:center ;
+}
+.no-profile-picture p{
+ margin-top: 35px;
+}

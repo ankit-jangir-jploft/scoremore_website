@@ -75,7 +75,7 @@ function App() {
             <Route path='/Testcompleted' element={<Testcompleted />} />
             <Route path='/Reviewquestions/:id' element={<Reviewquestions />} />
             <Route path='/Reviewprtest' element={<Reviewprtest />} />
-            <Route path='/Helpfaq' element={<Helpfaq />} />
+            <Route path='/Helpfaq/:tab' element={<Helpfaq />} />
             <Route path='/Flashcard' element={<CardContainer />} />
             <Route path='/Reminder' element={<Reminder />} />
             <Route path='/Myaccount' element={<Myaccount />} />

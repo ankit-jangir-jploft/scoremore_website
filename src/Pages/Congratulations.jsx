@@ -13,6 +13,7 @@ const Congratulations = () => {
         cardData // Add cardData here
     } = location.state || {};
     console.log("totalQuestions in congratulation", totalQuestions)
+    console.log("totalQuestions in resultsData", resultsData)
 
     return (
         <>
