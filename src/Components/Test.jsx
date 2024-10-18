@@ -159,6 +159,7 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
             testId,
         };
     
+        // Create a result entry
         const resultEntry = {
             questionNumber: currentQuestionIndex + 1,
             yourAnswer: selectedOption,
@@ -167,7 +168,20 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
             time: timeTaken,
         };
     
-        setResultsData(prev => [...prev, resultEntry]);
+        // Check if the question has already been answered
+        const existingResultIndex = resultsData.findIndex(result => result.questionNumber === resultEntry.questionNumber);
+    
+        if (existingResultIndex > -1) {
+            // Update the existing entry instead of adding a new one
+            setResultsData(prev => {
+                const updatedResults = [...prev];
+                updatedResults[existingResultIndex] = resultEntry; // Update the existing entry
+                return updatedResults;
+            });
+        } else {
+            // If not found, push a new entry
+            setResultsData(prev => [...prev, resultEntry]);
+        }
     
         try {
             const response = await axios.post(`${api_baseURL}/user/userQuestionData`, requestBody, {
@@ -197,34 +211,8 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
         }
     }, [currentQuestion, selectedOption, elapsedTime, isMarked, currentQuestionIndex, resultsData, countdownTime]);
     
-    const handlePreviousQuestion = useCallback(() => {
-        const submittedCount = resultsData.filter(result => result.isCorrect !== undefined).length;
     
-        if (currentQuestionIndex > 0 && currentQuestionIndex <= submittedCount) {
-            const prevIndex = currentQuestionIndex - 1;
-            const previousResult = resultsData[prevIndex];
-    
-            resetQuestionState();
-            setCurrentQuestionIndex(prevIndex);
-    
-            // Restore the time spent on the previous question
-            const previousQuestionTime = timeSpent[previousResult.questionId] || 0; // Default to 0 if not found
-            setElapsedTime(previousQuestionTime); // Set the elapsed time for the previous question
-            setShowExplanation(false); // Optionally hide explanation on going back
-    
-            // Also set the selected option if it exists
-            const previousAnswer = userAnswers[previousResult.questionId]; // Use questionId as key
-            if (previousAnswer) {
-                setSelectedOption(previousAnswer);
-            } else {
-                setSelectedOption(""); // Reset if no previous answer
-            }
-    
-            console.log("Moved to previous question, time reset to:", previousQuestionTime);
-        } else {
-            toast.info("You can't move to previous questions.");
-        }
-    }, [currentQuestionIndex, resultsData, resetQuestionState, userAnswers, timeSpent]);
+  
     
     
     
@@ -270,33 +258,75 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
 
     const handleEndTest = async () => {
         const token = localStorage.getItem('token');
-        const finalResultsData = [...resultsData];
-
+        const finalResultsData = [...resultsData]; // Copy the existing results data
+    
+        console.log("Initial results data:", finalResultsData);
+    
+        // Check if the current question is answered before processing it
         if (selectedOption) {
+            console.log("curemtquestion ", currentQuestion)
             const isCorrect = selectedOption === currentQuestion.correctOption;
             const timeTaken = formatTime(elapsedTime);
-            finalResultsData.push({
-                questionNumber: currentQuestionIndex + 1,
-                yourAnswer: selectedOption,
-                correctAnswer: currentQuestion.correctOption,
-                isCorrect,
-                time: timeTaken,
-            });
+            const questionId = currentQuestion._id; // Assuming you have a unique identifier for each question
+    
+            console.log(`Current Question ID: ${questionId}`);
+            console.log(`Selected Option: ${selectedOption}, Correct Option: ${currentQuestion.correctOption}`);
+    
+            // Check if the current question has already been answered using questionId
+            const existingResultIndex = finalResultsData.findIndex(
+                (result) => result.questionId === questionId // Check by unique questionId
+            );
+    
+            if (existingResultIndex > -1) {
+                // Update the existing entry
+                console.log(`Updating existing entry at index ${existingResultIndex}`);
+                finalResultsData[existingResultIndex] = {
+                    questionId, // Use the unique questionId
+                    questionNumber: existingResultIndex + 1, // Adjust as needed
+                    yourAnswer: selectedOption,
+                    correctAnswer: currentQuestion.correctOption,
+                    isCorrect,
+                    time: timeTaken,
+                };
+            } else {
+                // If not found, push a new entry
+                console.log(`Adding new entry for question ID: ${questionId}`);
+                finalResultsData.push({
+                    questionId, // Use the unique questionId
+                    questionNumber: finalResultsData.length + 1,
+                    yourAnswer: selectedOption,
+                    correctAnswer: currentQuestion.correctOption,
+                    isCorrect,
+                    time: timeTaken,
+                });
+            }
+        } else {
+            // If no option is selected for the current question, we skip adding it to results
+            console.log(`No answer selected for question ID: ${currentQuestion.questionId}. Skipping.`);
         }
-
+    
+        // Prepare results for submission
         const totalNoOfQuestion = questions.length;
         const totalCorrect = finalResultsData.filter(result => result.isCorrect).length;
         const totalIncorrect = finalResultsData.length - totalCorrect;
         const totalAttemptedQuestions = finalResultsData.length;
-
+    
+        console.log("Final results data before submission:", finalResultsData);
+        console.log(`Total Questions: ${totalNoOfQuestion}, Total Correct: ${totalCorrect}, Total Incorrect: ${totalIncorrect}, Total Attempted: ${totalAttemptedQuestions}`);
+    
         const testResultBody = {
             userId,
             testId,
             testType: params.card,
+            totalNoOfQuestion,
+            totalCorrect,
+            totalIncorrect,
+            totalAttemptedQuestions,
+            resultsData: finalResultsData, // Include the final results data in the API body
         };
-
+    
         console.log("Submitting test results:", testResultBody);
-
+    
         try {
             const response = await axios.post(`${api_baseURL}/user/submitTestResult`, testResultBody, {
                 headers: {
@@ -305,9 +335,9 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
                 },
                 withCredentials: true,
             });
-
+    
             console.log("API Response for submitTestResult:", response.data);
-
+    
             if (response.data.success) {
                 navigate('/Congratulations', {
                     state: {
@@ -317,15 +347,47 @@ const Test = ({ questions, userId, testId, cardData, time }) => {
                         resultsData: finalResultsData,
                     },
                 });
+                console.log("Navigation to Congratulations page successful.");
             } else {
                 toast.error("Failed to submit test results.");
+                console.error("Failed to submit test results:", response.data.message);
             }
         } catch (error) {
             console.error("Error submitting test results", error);
             toast.error("Error submitting test results. Please try again.");
         }
     };
-
+    
+    
+    
+    const handlePreviousQuestion = useCallback(() => {
+        const submittedCount = resultsData.filter(result => result.isCorrect !== undefined).length;
+    
+        if (currentQuestionIndex > 0 && currentQuestionIndex <= submittedCount) {
+            const prevIndex = currentQuestionIndex - 1;
+            const previousResult = resultsData[prevIndex];
+    
+            resetQuestionState();
+            setCurrentQuestionIndex(prevIndex);
+    
+            // Restore the time spent on the previous question
+            const previousQuestionTime = timeSpent[previousResult.questionId] || 0; // Default to 0 if not found
+            setElapsedTime(previousQuestionTime); // Set the elapsed time for the previous question
+            setShowExplanation(false); // Optionally hide explanation on going back
+    
+            // Also set the selected option if it exists
+            const previousAnswer = userAnswers[previousResult.questionId]; // Use questionId as key
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer);
+            } else {
+                setSelectedOption(""); // Reset if no previous answer
+            }
+    
+            console.log("Moved to previous question, time reset to:", previousQuestionTime);
+        } else {
+            toast.info("You can't move to previous questions.");
+        }
+    }, [currentQuestionIndex, resultsData, resetQuestionState, userAnswers, timeSpent]);
 
 
     const handleEndClick = () => {

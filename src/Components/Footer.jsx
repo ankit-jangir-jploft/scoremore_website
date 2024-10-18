@@ -16,7 +16,10 @@ const Footer = () => {
                 <footer>
                     <Row>
                         <Col>
-                            <img src={LogoFooter} alt="Logo" className='mb-3' />
+                        <a href='/'>
+                        <img src={LogoFooter} alt="Logo" className='mb-3' />
+                        </a>
+                            
                             {/* <p>20 Osgood Rd, Milford, NH 03055, USA
                             +1283871239190213021</p> */}
                             <a href=''>

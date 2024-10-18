@@ -62,7 +62,7 @@ const Myaccount = () => {
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                        <Link to={'/'}><img src={Brightnes} className='icn-img' alt="Accessibility" /> Accessibility</Link></Col>
+                                        <Link to={''}><img src={Brightnes} className='icn-img' alt="Accessibility" /> Accessibility</Link></Col>
                                     <Col md={6} className='text-end'>
                                         <Form className="d-inline-block">
                                             {/* <Form.Check
@@ -103,16 +103,33 @@ const Myaccount = () => {
                             <div className='prfl-bg'>
                                 <Row>
                                     <Col md={6}>
-                                        <Link to={'/Helpfaq'}><img src={Chat} className='icn-img' alt="FAQs" /> FAQs</Link>
+                                        <Link to={'/Helpfaq/FAQ'} onClick={() => setActiveTab('FAQ')}>
+                                            <img src={Chat} className='icn-img' alt="FAQs" /> FAQs
+                                        </Link>
                                     </Col>
-                                    <Col md={6} className='text-end'><Link to={'/'}><img src={Nextnn} alt="Next" /></Link></Col>
-                                    <Col md={12} ><hr /></Col>
+                                    <Col md={6} className='text-end'>
+                                        <Link to={'/'}>
+                                            <img src={Nextnn} alt="Next" />
+                                        </Link>
+                                    </Col>
+                                    <Col md={12}>
+                                        <hr />
+                                    </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                        <Link to={'/Helpfaq'}><img src={Contactsup} className='icn-img' alt="Contact Support" /> Contact Support</Link></Col>
-                                    <Col md={6} className='text-end'><Link to={'/'}><img src={Nextnn} alt="Next" /></Link></Col>
+                                        <Link to={'/Helpfaq/Contact'} onClick={() => setActiveTab('Contact')}>
+                                            <img src={Contactsup} className='icn-img' alt="Contact Support" /> Contact Support
+                                        </Link>
+                                    </Col>
+                                    <Col md={6} className='text-end'>
+                                        <Link to={'/'}>
+                                            <img src={Nextnn} alt="Next" />
+                                        </Link>
+                                    </Col>
                                 </Row>
+
+
                             </div>
                             <p>GET INVOLVED</p>
                             <div className='prfl-bg'>

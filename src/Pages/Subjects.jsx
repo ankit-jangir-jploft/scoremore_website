@@ -5,6 +5,7 @@ import { StepC } from './StepC';
 import { useLocation, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID for generating unique test IDs
 import { TestContext } from '../Components/TestContext';
+import { randomtestID } from '../api/apiHelper';
 
 const Subjects = () => {
     const { testData } = useContext(TestContext);
@@ -22,7 +23,7 @@ const Subjects = () => {
     const [timeLimit, setTimeLimit] = useState(null); // State for time limit
 
     // Modify setType to accept questions, time, and set the testId
-    const handleTypeChange = (newType, questions = [], time = null) => {
+    const handleTypeChange = async (newType, questions = [], time = null) => {
         setType(newType);
         if (questions.length) {
             setFilteredQuestions(questions); // Store filtered questions when moving to StepC
@@ -33,14 +34,14 @@ const Subjects = () => {
 
         // If moving to StepB, generate a new test ID
         if (newType === 2) {
-            const generatedTestId = uuidv4(); // Generate a new test ID
+            const generatedTestId = await randomtestID(); // Generate a new test ID
             setTestId(generatedTestId); // Store the test ID
         }
 
         // If moving to StepC, generate a new test ID if it was not set before
         if (newType === 3) {
             if (!testId) { // Check if testId is not already set
-                const generatedTestId = uuidv4(); // Generate a new test ID
+               const generatedTestId = await randomtestID(); // Generate a new test ID
                 setTestId(generatedTestId); // Store the test ID
             }
         }

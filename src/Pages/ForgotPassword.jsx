@@ -46,7 +46,7 @@ const ForgotPassword = () => {
                     )}</Link>
                     <div className='logn-pge-out'>
                         <div className='logn-pge-in'>
-                            <h1>Forgot Password?</h1>
+                            <h1>Reset Password?</h1>
                             <p>Enter your email ID to receive a link</p>
                             <Form onSubmit={handleSubmit}> {/* Handle form submission */}
                                 <Form.Group className="mb-3" controlId="formGroupEmail">

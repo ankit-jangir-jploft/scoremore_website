@@ -12,7 +12,7 @@ import InputRange from 'react-input-range';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { api_baseURL } from '../api/apiHelper';
+import { api_baseURL, randomtestID } from '../api/apiHelper';
 import { v4 as uuidv4 } from 'uuid';
 import { TestContext } from '../Components/TestContext';
 
@@ -68,7 +68,7 @@ const Dashboard = () => {
 
     const startTest = async () => {
         let userId = localStorage.getItem("userId");
-        const generatedTestId = uuidv4();
+        const generatedTestId = await randomtestID();
         
         const requestData = {
             userId: userId,
@@ -108,13 +108,13 @@ const Dashboard = () => {
             }
         } else if (card === "readinessTest") {
             let userId = localStorage.getItem("userId");
-            const generatedTestId = uuidv4();
+            const generatedTestId = await randomtestID();
             const requestData = {
                 userId: userId,
                 cardType: card,
                 subjects: {},
                 questionType: {},
-                numberOfQuestions: 50,
+                numberOfQuestions: 70,
                 testId: generatedTestId
             };
 
@@ -126,10 +126,10 @@ const Dashboard = () => {
             } else {
                 toast.error(response.data.message);
             }
-        } else {
+        } else if ((card === "dailyChallenge")){
             // Other cards functionality
             let userId = localStorage.getItem("userId");
-            const generatedTestId = uuidv4();
+            const generatedTestId = await randomtestID();
             const requestData = {
                 userId: userId,
                 cardType: card,
@@ -147,6 +147,10 @@ const Dashboard = () => {
             } else {
                 toast.error(response.data.message);
             }
+        } else {
+            const generatedTestId = await randomtestID();
+            setTestDetails({ card, generatedTestId });
+                navigate(`/Subjects/${card}`);
         }
     };
 

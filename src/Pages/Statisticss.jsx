@@ -63,6 +63,7 @@ const Statisticss = () => {
     }, []);
 
     const { overallStats, subjectInsights } = allExamRecord;
+    
 
     return (
         <>

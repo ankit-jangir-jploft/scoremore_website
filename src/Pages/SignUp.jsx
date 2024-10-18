@@ -7,7 +7,7 @@ import Brandw from "../assets/img/score-logow.svg";
 import { useTheme } from '../Components/ThemeProvider';
 import axios from 'axios';
 import { api_baseURL } from '../api/apiHelper';
-import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import { ToastContainer, toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
@@ -21,25 +21,36 @@ const SignUp = () => {
         confirmPassword: ''
     });
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
-    
+    const [loading, setLoading] = useState(false); 
+    const [isChecked, setIsChecked] = useState(false); // New state for checkbox
+
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        const { name, value, type, checked } = e.target;
+        if (type === "checkbox") {
+            setIsChecked(checked); // Update checkbox state
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
     };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { firstName, lastName, email, password, confirmPassword } = formData;
-        
+
+        if (!isChecked) {
+            setError('You must agree to the Privacy policy and Terms & conditions');
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
-        setLoading(true); // Start loader when API call starts
+        setLoading(true);
     
         try {
             const response = await axios.post(`${api_baseURL}/user/signup`, {
@@ -55,13 +66,15 @@ const SignUp = () => {
                 navigate("/login");
                 toast.success(response.data.message);
             } else {
+                debugger
                 setError(response.data.message);
                 toast.error(response.data.message);
             }
         } catch (error) {
-            setError('Failed to sign up, please try again later.');
+            console.log("error in signup", error)
+            setError(error?.response?.data?.message || "Failed to sign up !!");
         } finally {
-            setLoading(false); // Stop loader once API call is complete
+            setLoading(false);
         }
     };
     
@@ -128,10 +141,11 @@ const SignUp = () => {
                                     <Form.Check 
                                         type="checkbox" 
                                         label="By signing up you agree to our Privacy policy and Terms & conditions." 
+                                        checked={isChecked} 
+                                        onChange={handleChange} // Update the checkbox state
                                     />
                                 </Form.Group>
                                 
-                                {/* Show the loader or the sign-up button */}
                                 <Button type="submit" className='btn-primary px-5' disabled={loading}>
                                     {loading ? <Spinner animation="border" size="sm" /> : "Sign Up"}
                                 </Button>
